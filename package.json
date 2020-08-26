@@ -1,0 +1,21 @@
+{
+  "name": "bidbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon"
+  },
+  "keywords": [],
+  "author": "Erin Rivas",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.4",
+    "dotenv": "^8.2.0"
+  },
+  "dependencies": {
+    "@types/node": "^14.6.0",
+    "discord.js": "^12.3.1"
+  }
+}
