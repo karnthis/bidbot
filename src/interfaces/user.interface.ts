@@ -1,5 +1,7 @@
 export interface UserInterface {
     name: string,
-    group: string,
-    koins: number,
+    discordId: string,
+    status: string,
+    corp: string,
+    alliance: string,
 }

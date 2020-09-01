@@ -1,5 +1,6 @@
 export interface MoonInterface {
-    name: string,
+    location: string,
     id: number,
     details: string,
+    status: string,
 }
