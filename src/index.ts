@@ -1,31 +1,32 @@
-import * as Discord from 'discord.js'
-import * as DotEnv from 'dotenv'
-import {GuildMember, Message, User} from "discord.js";
-import {UserInterface} from './interfaces/user.interface'
-import {MoonInterface} from './interfaces/moon.interface'
-import {AuctionMoonInterface} from "./interfaces/auction.moon.interface";
-import {tableBuilder} from './sql/tables.sql'
+import * as Discord from 'discord.js';
+import * as DotEnv from 'dotenv';
+import {GuildMember, Message, Role, User} from 'discord.js';
+import {UserInterface} from './interfaces/user.interface';
+import {MoonInterface} from './interfaces/moon.interface';
+import {AuctionMoonInterface} from './interfaces/auction.moon.interface';
+import {tableBuilder} from './sql/tables.sql';
 import * as Sql from 'better-sqlite3';
-import * as Dayjs from 'dayjs'
+import * as Dayjs from 'dayjs';
 
-import * as utc from 'dayjs/plugin/utc'
-import * as timezone from 'dayjs/plugin/timezone'
+import * as utc from 'dayjs/plugin/utc';
+import * as timezone from 'dayjs/plugin/timezone';
 
 const db = new Sql('./src/sql/data.sqlite', {});
-db.exec(tableBuilder.users)
-db.exec(tableBuilder.moons)
-db.exec(tableBuilder.auctions)
-db.exec(tableBuilder.groups)
-const userSql = db.prepare('select * from users')
+db.exec(tableBuilder.users);
+db.exec(tableBuilder.moons);
+db.exec(tableBuilder.auctions);
+db.exec(tableBuilder.groups);
+const userSql = db.prepare('select * from users');
 
-const users: UserInterface[] = userSql.all()
-Dayjs().format()
-Dayjs.extend(utc)
-Dayjs.extend(timezone)
+const users: UserInterface[] = userSql.all();
+Dayjs().format();
+Dayjs.extend(utc);
+Dayjs.extend(timezone);
 
-DotEnv.config()
-const DClient = new Discord.Client()
-const prefix = ''
+DotEnv.config();
+const DClient = new Discord.Client();
+const prefix = '';
+const startingKredits = 100;
 
 const moons: MoonInterface[] = [
     {
@@ -48,6 +49,8 @@ const activeAuctions: AuctionMoonInterface[] = [
 
 DClient.on(`ready`, () => {
     console.log(`Started Successfully`)
+    console.log(`Building Environment`)
+    
 })
 
 // Bot Message Logic
@@ -70,22 +73,20 @@ DClient.on('message', (message: Message) => {
     } else if (message.content.startsWith(`${prefix}info`)) {
         message.channel.send(helpText())
 
-    } else if (message.content.startsWith(`${prefix}manager`)) {
+    } else if (message.content.startsWith(`${prefix}setalliances`)) {
         if (!message.member.roles.cache.find((role) => role == bidAdmin)) {
             message.channel.send('Not Authorized')
             return
         }
         if (!message.mentions.roles.array().length) {
             // console.log('no mention')
-            message.channel.send('Mention the User(s) you wish to register')
+            message.channel.send('Mention the Alliance Role(s) you wish to register')
         } else {
             // console.log('mention')
-            message.mentions.roles.forEach((member) => console.log(member.name, typeof member.id))
+            message.mentions.roles.forEach((role: Role) => console.log(role.name))
             // message.mentions.members.forEach((member:GuildMember) => member.roles.add(authedBidder))
             message.channel.send('Access updated')
         }
-
-        // message.author.send('To register, please reply with a mention to yourself.')
 
     } else if (message.content.startsWith(`${prefix}register`)) {
         if (!message.member.roles.cache.find((role) => role == bidAdmin)) {
